@@ -5,6 +5,9 @@ Notable changes to this project will be documented in this file.
 Per-PR attribution and contributor credits are published automatically on the corresponding GitHub release page; this file is the curated, human-readable summary.
 
 ## [Unreleased]
+### Added
+- Optional API key authentication: set `API_KEYS` to a JSON list of accepted Bearer tokens to protect API routes. Empty by default; `/health`, `/v1/test`, `/web` and the API docs (`/docs`, `/redoc`, `/openapi.json`) remain open. The bundled web player doesn't send a key yet.
+
 ### Fixed
 - `/dev/tune` informative error instead of bare `Internal Server Error` if the blend solver could not converge on a reference (scipy 1.14 nnls bug)
 - Apple Silicon (MPS): memory no longer grows with every request; it stays near its startup size instead of climbing until the machine runs out

@@ -166,6 +166,12 @@ Names are the field names from `api/src/core/config.py`, uppercased. Unrecognize
 | `ENABLE_INNO_TUNER` | `false` | Expose `POST /dev/tune`, see [inno-tune.md](inno-tune.md) |
 | `MODEL_AUTO_UNLOAD_TIMEOUT_SECONDS` | `0.0` | Idle seconds before auto-unload; `0` disables auto-unload |
 
+**API keys**
+
+| Variable | Default | |
+|---|---|---|
+| `API_KEYS` | `[]` | JSON list of ASCII tokens accepted as `Authorization: Bearer <key>` on the API routes. Set in `.env` as `API_KEYS=["key-one","key-two"]`. Empty disables auth. `/health`, `/v1/test`, `/web` (including `/web/config`), `/docs`, `/redoc` and `/openapi.json` stay open; the bundled web player doesn't send a key |
+
 ## Text normalization
 
 `normalization_options` on the speech endpoints, per request. The normalizer runs for English only, the one language with a normalizer registered. Other languages go to the phonemizer as written, `remove_emoji` aside.

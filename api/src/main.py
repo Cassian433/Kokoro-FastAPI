@@ -9,10 +9,11 @@ from contextlib import asynccontextmanager
 
 import torch
 import uvicorn
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from loguru import logger
 
+from .core.auth import require_api_key
 from .core.config import settings, unrecognized_env_file_keys
 from .routers.debug import router as debug_router
 from .routers.development import router as dev_router
@@ -151,11 +152,12 @@ if settings.cors_enabled:
     )
 
 # Include routers
-app.include_router(openai_router, prefix="/v1")
-app.include_router(dev_router)  # Development endpoints
-app.include_router(ssml_router)  # SSML translation and capabilities
-app.include_router(tune_router)  # /dev/tune, 403 unless enabled
-app.include_router(debug_router)  # Debug endpoints (403 unless enabled)
+api_auth = [Depends(require_api_key)]
+app.include_router(openai_router, prefix="/v1", dependencies=api_auth)
+app.include_router(dev_router, dependencies=api_auth)  # Development endpoints
+app.include_router(ssml_router, dependencies=api_auth)  # SSML translation
+app.include_router(tune_router, dependencies=api_auth)  # /dev/tune, 403 unless enabled
+app.include_router(debug_router, dependencies=api_auth)  # /debug/*, 403 unless enabled
 if settings.enable_web_player:
     app.include_router(web_router, prefix="/web")  # Web player static files
 
